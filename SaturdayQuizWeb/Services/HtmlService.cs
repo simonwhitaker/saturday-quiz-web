@@ -60,7 +60,7 @@ namespace SaturdayQuizWeb.Services
                 {
                     Number = number,
                     Type = GetQuestionType(number),
-                    Text = question,
+                    QuestionText = question,
                     Answer = answer
                 });
             }
