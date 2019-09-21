@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
+using SaturdayQuizWeb.Utils;
 
 namespace SaturdayQuizWeb.Controllers
 {
@@ -13,20 +14,19 @@ namespace SaturdayQuizWeb.Controllers
     {
         private const int DefaultQuizCount = 10;
         
-        private IConfiguration Configuration { get; }
-        
         // TODO: inject
         private readonly QuizMetadataService _service = new QuizMetadataService();
+        private readonly ConfigVariables _configVariables;
 
         public QuizMetadataController(IConfiguration config)
         {
-            Configuration = config;
+            _configVariables = new ConfigVariables(config);
         }
 
         [HttpGet]
         public async Task<ActionResult<List<QuizMetadata>>> GetQuizMetadata([FromQuery] int count = DefaultQuizCount)
         {
-            return await _service.GetQuizMetadata(Configuration["GuardianApiKey"], count);
+            return await _service.GetQuizMetadata(_configVariables.GuardianApiKey, count);
         }
     }
 }

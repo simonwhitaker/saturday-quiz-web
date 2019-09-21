@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using SaturdayQuizWeb.Services;
+using SaturdayQuizWeb.Utils;
 
 namespace SaturdayQuizWeb.Tests
 {
@@ -9,19 +10,21 @@ namespace SaturdayQuizWeb.Tests
         private IConfiguration Configuration { get; }
 
         private readonly QuizMetadataService _service = new QuizMetadataService();
+        private readonly ConfigVariables _configVariables;
 
         public QuizMetadataServiceTest()
         {
             Configuration = new ConfigurationBuilder()
                 .AddUserSecrets<QuizMetadataServiceTest>()
                 .Build();
+            _configVariables = new ConfigVariables(Configuration);
         }
 
         [Test]
         [Ignore(Consts.IntegrationTest)]
         public void TestGetQuizMetadata()
         {
-            var request = _service.GetQuizMetadata(Configuration["GuardianApiKey"], 7);
+            var request = _service.GetQuizMetadata(_configVariables.GuardianApiKey, 7);
             request.Wait();
             Assert.AreEqual(7, request.Result.Count);
         }

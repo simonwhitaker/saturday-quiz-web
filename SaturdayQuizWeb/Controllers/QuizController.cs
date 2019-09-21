@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
+using SaturdayQuizWeb.Utils;
 
 namespace SaturdayQuizWeb.Controllers
 {
@@ -12,19 +13,18 @@ namespace SaturdayQuizWeb.Controllers
     {
         // TODO: inject
         private readonly QuizService _quizService = new QuizService();
-        
-        private IConfiguration Configuration { get; }
+        private readonly ConfigVariables _configVariables;
 
         public QuizController(IConfiguration config)
         {
-            Configuration = config;
+            _configVariables = new ConfigVariables(config);
         }
 
         // GET /api/quiz
         [HttpGet]
         public async Task<ActionResult<Quiz>> GetById([FromQuery] string id = null)
         {
-            return await _quizService.GetQuiz(Configuration["GuardianApiKey"], id);
+            return await _quizService.GetQuiz(_configVariables.GuardianApiKey, id);
         }
     }
 }
