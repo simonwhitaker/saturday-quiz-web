@@ -14,7 +14,8 @@
 
 // Dimensions
 @dimen-outer-padding: 20pt;
-@dimen-indent: 50pt;
+@dimen-outer-padding-narrow: 10pt;
+@dimen-indent: 45pt;
 @font-size-date: 16pt;
 @font-size-title: 40pt;
 @font-size-question: 24pt;
@@ -36,6 +37,10 @@
 
 .indented() {
   margin-left: @dimen-indent;
+}
+
+.non-indented() {
+  margin-left: 0;
 }
 
 // ---------- Rules ----------
@@ -62,12 +67,15 @@ body {
 
 #question-what-links {
   .indented;
-  color: @colour-foreground-dimmed;
+  color: @colour-background;
   font-size: @font-size-what-links;
   font-weight: @font-weight-heavy;
   text-transform: uppercase;
   i {
     vertical-align: middle !important;
+  }
+  &.visible {
+    color: @colour-foreground-dimmed;
   }
 }
 
@@ -96,4 +104,27 @@ body {
 #nav-right {
   .nav-panel;
   right: 0;
+}
+
+@media(max-width: 700px) {
+  body {
+    padding: @dimen-outer-padding-narrow;
+  }
+  #question-what-links {
+    .non-indented;
+  }
+  #question-number {
+    float: none;
+    display: inline;
+    &::after {
+      content: " "
+    }
+  }
+  #question {
+    .non-indented;
+    display: inline;
+  }
+  #answer {
+    .non-indented;
+  }
 }

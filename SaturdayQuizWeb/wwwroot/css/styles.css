@@ -15,8 +15,8 @@ body {
   font-size: 40pt;
 }
 #question-what-links {
-  margin-left: 50pt;
-  color: #666666;
+  margin-left: 45pt;
+  color: #000000;
   font-size: 12pt;
   font-weight: 700;
   text-transform: uppercase;
@@ -24,18 +24,21 @@ body {
 #question-what-links i {
   vertical-align: middle !important;
 }
+#question-what-links.visible {
+  color: #666666;
+}
 #question-number {
   color: #dddddd;
   font-size: 24pt;
   float: left;
 }
 #question {
-  margin-left: 50pt;
+  margin-left: 45pt;
   color: #dddddd;
   font-size: 24pt;
 }
 #answer {
-  margin-left: 50pt;
+  margin-left: 45pt;
   color: #ffdd00;
   font-size: 24pt;
 }
@@ -52,4 +55,26 @@ body {
   top: 0;
   bottom: 0;
   right: 0;
+}
+@media (max-width: 700px) {
+  body {
+    padding: 10pt;
+  }
+  #question-what-links {
+    margin-left: 0;
+  }
+  #question-number {
+    float: none;
+    display: inline;
+  }
+  #question-number::after {
+    content: " ";
+  }
+  #question {
+    margin-left: 0;
+    display: inline;
+  }
+  #answer {
+    margin-left: 0;
+  }
 }

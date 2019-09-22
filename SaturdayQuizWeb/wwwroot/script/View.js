@@ -56,7 +56,7 @@
     
     View.prototype.showQuestion = function(question, isWhatLinks) {
         $('#question').html(question);
-        $('#question-what-links').html(isWhatLinks ? '<i class="material-icons">link</i> What links' : '&nbsp;');
+        $('#question-what-links').toggleClass('visible', isWhatLinks);
     };
     
     View.prototype.showAnswer = function(answer) {
