@@ -12,9 +12,33 @@
 @colour-date-text: @colour-foreground-highlight;
 @colour-answer-text: @colour-foreground-highlight;
 
+// Dimensions
+@dimen-outer-padding: 20pt;
+@dimen-indent: 50pt;
+@font-size-date: 16pt;
+@font-size-title: 40pt;
+@font-size-question: 24pt;
+@font-size-what-links: 12pt;
+
 // Fonts
 @font-family: 'Open Sans', sans-serif;
 @font-weight-light: 300;
+@font-weight-heavy: 600;
+
+// ---------- Mixins ----------
+
+.mixin-nav-panel() {
+  position: absolute;
+  width: 45%;
+  height: 100%;
+  top: 0;
+}
+
+.mixin-indented() {
+  margin-left: @dimen-indent;
+}
+
+// ---------- Rules ----------
 
 * {
   font-family: @font-family;
@@ -23,5 +47,50 @@
 
 body {
   background: @colour-background;
+  padding: @dimen-outer-padding;
+}
+
+#quiz-date {
+  color: @colour-foreground-highlight;
+  font-size: @font-size-date;
+}
+
+#title {
   color: @colour-foreground;
+  font-size: @font-size-title;
+}
+
+#question-what-links {
+  .mixin-indented;
+  color: @colour-foreground-dimmed;
+  font-size: @font-size-what-links;
+  font-weight: @font-weight-heavy;
+  text-transform: uppercase;
+}
+
+#question-number {
+  color: @colour-foreground;
+  font-size: @font-size-question;
+  float: left;
+}
+
+#question {
+  .mixin-indented;
+  color: @colour-foreground;
+  font-size: @font-size-question;
+}
+
+#answer {
+  .mixin-indented;
+  color: @colour-foreground-highlight;
+  font-size: @font-size-question;
+}
+
+#nav-left {
+  .mixin-nav-panel;
+  left: 0;
+}
+#nav-right {
+  .mixin-nav-panel;
+  right: 0;
 }

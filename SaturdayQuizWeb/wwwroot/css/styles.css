@@ -4,5 +4,49 @@
 }
 body {
   background: #000000;
+  padding: 20pt;
+}
+#quiz-date {
+  color: #ffdd00;
+  font-size: 16pt;
+}
+#title {
   color: #dddddd;
+  font-size: 40pt;
+}
+#question-what-links {
+  margin-left: 50pt;
+  color: #666666;
+  font-size: 12pt;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+#question-number {
+  color: #dddddd;
+  font-size: 24pt;
+  float: left;
+}
+#question {
+  margin-left: 50pt;
+  color: #dddddd;
+  font-size: 24pt;
+}
+#answer {
+  margin-left: 50pt;
+  color: #ffdd00;
+  font-size: 24pt;
+}
+#nav-left {
+  position: absolute;
+  width: 45%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+#nav-right {
+  position: absolute;
+  width: 45%;
+  height: 100%;
+  top: 0;
+  right: 0;
 }
