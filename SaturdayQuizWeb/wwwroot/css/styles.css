@@ -6,6 +6,12 @@ body {
   background: #000000;
   padding: 20pt;
 }
+#page-title {
+  margin-top: 30pt;
+}
+#page-title div {
+  text-align: center;
+}
 #quiz-date {
   color: #ffdd00;
   font-size: 16pt;

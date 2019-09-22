@@ -16,6 +16,7 @@
 @dimen-outer-padding: 20pt;
 @dimen-outer-padding-narrow: 10pt;
 @dimen-indent: 45pt;
+@dimen-title-top-margin: 30pt;
 @font-size-date: 16pt;
 @font-size-title: 40pt;
 @font-size-question: 24pt;
@@ -53,6 +54,13 @@
 body {
   background: @colour-background;
   padding: @dimen-outer-padding;
+}
+
+#page-title {
+  margin-top: @dimen-title-top-margin;
+  div {
+    text-align: center;
+  }
 }
 
 #quiz-date {
