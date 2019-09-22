@@ -18,7 +18,7 @@ body {
   margin-left: 50pt;
   color: #666666;
   font-size: 12pt;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
 }
 #question-number {
@@ -39,14 +39,14 @@ body {
 #nav-left {
   position: absolute;
   width: 45%;
-  height: 100%;
   top: 0;
+  bottom: 0;
   left: 0;
 }
 #nav-right {
   position: absolute;
   width: 45%;
-  height: 100%;
   top: 0;
+  bottom: 0;
   right: 0;
 }

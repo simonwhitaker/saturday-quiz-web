@@ -23,18 +23,18 @@
 // Fonts
 @font-family: 'Open Sans', sans-serif;
 @font-weight-light: 300;
-@font-weight-heavy: 600;
+@font-weight-heavy: 700;
 
 // ---------- Mixins ----------
 
-.mixin-nav-panel() {
+.nav-panel() {
   position: absolute;
   width: 45%;
-  height: 100%;
   top: 0;
+  bottom: 0;
 }
 
-.mixin-indented() {
+.indented() {
   margin-left: @dimen-indent;
 }
 
@@ -61,7 +61,7 @@ body {
 }
 
 #question-what-links {
-  .mixin-indented;
+  .indented;
   color: @colour-foreground-dimmed;
   font-size: @font-size-what-links;
   font-weight: @font-weight-heavy;
@@ -75,22 +75,22 @@ body {
 }
 
 #question {
-  .mixin-indented;
+  .indented;
   color: @colour-foreground;
   font-size: @font-size-question;
 }
 
 #answer {
-  .mixin-indented;
+  .indented;
   color: @colour-foreground-highlight;
   font-size: @font-size-question;
 }
 
 #nav-left {
-  .mixin-nav-panel;
+  .nav-panel;
   left: 0;
 }
 #nav-right {
-  .mixin-nav-panel;
+  .nav-panel;
   right: 0;
 }
