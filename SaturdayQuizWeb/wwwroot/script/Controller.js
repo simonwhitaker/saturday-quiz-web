@@ -16,6 +16,7 @@
     
     Controller.prototype.onViewReady = function(view) {
         this.view = view;
+        this.view.setController(this);
         this.view.onQuizLoading();
         this.loadQuiz();
     };
