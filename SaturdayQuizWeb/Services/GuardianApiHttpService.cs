@@ -18,16 +18,13 @@ namespace SaturdayQuizWeb.Services
     /// </summary>
     public class GuardianApiHttpService : IGuardianApiHttpService
     {
-        private const string UrlBase = "https://content.guardianapis.com/theguardian/";
-        private const string ResourceFormat = "series/the-quiz-thomas-eaton?api-key={0}&page-size={1}";
-
         private readonly HttpClient _httpClient;
         private readonly IConfigVariables _configVariables;
 
         public GuardianApiHttpService(HttpClient httpClient, IConfigVariables configVariables)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(UrlBase);
+            _httpClient.BaseAddress = new Uri("https://content.guardianapis.com/theguardian/");
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             _configVariables = configVariables;
@@ -36,10 +33,8 @@ namespace SaturdayQuizWeb.Services
         public async Task<GuardianApiResponse> ListQuizzesAsync(int pageSize = 5)
         {
             GuardianApiResponse apiResponse = null;
-            var response = await _httpClient.GetAsync(string.Format(
-                ResourceFormat,
-                _configVariables.GuardianApiKey,
-                pageSize));
+            var response = await _httpClient.GetAsync(
+                $"series/the-quiz-thomas-eaton?api-key={_configVariables.GuardianApiKey}&page-size={pageSize}");
             if (response.IsSuccessStatusCode)
             {
                 apiResponse = await response.Content.ReadAsAsync<GuardianApiResponse>();

@@ -16,14 +16,12 @@ namespace SaturdayQuizWeb.Services
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public class GuardianScraperHttpService : IGuardianScraperHttpService
     {
-        private const string UrlBase = "https://www.theguardian.com/";
-
         private readonly HttpClient _httpClient;
         
         public GuardianScraperHttpService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(UrlBase);
+            _httpClient.BaseAddress = new Uri("https://www.theguardian.com/");
         }
 
         public async Task<string> GetQuizPageContentAsync(string quizId) =>
