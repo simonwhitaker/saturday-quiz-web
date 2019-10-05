@@ -20,7 +20,7 @@ namespace SaturdayQuizWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<Quiz>> GetById([FromQuery] string id = null)
         {
-            return await _quizService.GetQuiz(id);
+            return await _quizService.GetQuizAsync(id);
         }
     }
 }

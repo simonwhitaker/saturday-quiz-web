@@ -3,33 +3,37 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using SaturdayQuizWeb.Model.Api;
 using SaturdayQuizWeb.Utils;
 
-namespace SaturdayQuizWeb.Api
+namespace SaturdayQuizWeb.Services
 {
-    public interface IGuardianApi
+    public interface IGuardianApiHttpService
     {
-        Task<GuardianApiResponse> ListQuizzes(int pageSize = 5);
+        Task<GuardianApiResponse> ListQuizzesAsync(int pageSize = 5);
     }
-
-    public class GuardianApi : IGuardianApi
+    
+    /// <summary>
+    /// A typed HTTP client: see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests?view=aspnetcore-3.0#typed-clients
+    /// </summary>
+    public class GuardianApiHttpService : IGuardianApiHttpService
     {
         private const string UrlBase = "https://content.guardianapis.com/theguardian/";
         private const string ResourceFormat = "series/the-quiz-thomas-eaton?api-key={0}&page-size={1}";
-        
+
         private readonly HttpClient _httpClient;
         private readonly IConfigVariables _configVariables;
 
-        public GuardianApi(IHttpClientFactory httpClientFactory, IConfigVariables configVariables)
+        public GuardianApiHttpService(HttpClient httpClient, IConfigVariables configVariables)
         {
-            _httpClient = httpClientFactory.CreateClient();
+            _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(UrlBase);
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             _configVariables = configVariables;
         }
 
-        public async Task<GuardianApiResponse> ListQuizzes(int pageSize = 5)
+        public async Task<GuardianApiResponse> ListQuizzesAsync(int pageSize = 5)
         {
             GuardianApiResponse apiResponse = null;
             var response = await _httpClient.GetAsync(string.Format(

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using SaturdayQuizWeb.Api;
 using SaturdayQuizWeb.Services;
 using SaturdayQuizWeb.Utils;
 
@@ -12,13 +11,6 @@ namespace SaturdayQuizWeb
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -33,12 +25,7 @@ namespace SaturdayQuizWeb
                 });
             });
 
-            services.AddHttpClient();
-            services.AddSingleton<IConfigVariables, ConfigVariables>();
-            services.AddSingleton<IQuizService, QuizService>();
-            services.AddSingleton<IQuizMetadataService, QuizMetadataService>();
-            services.AddSingleton<IHtmlService, HtmlService>();
-            services.AddSingleton<IGuardianApi, GuardianApi>();
+            RegisterDependencies(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +47,16 @@ namespace SaturdayQuizWeb
             app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Guardian Quiz API v1"); });
+        }
+
+        private static void RegisterDependencies(IServiceCollection services)
+        {
+            services.AddHttpClient<IGuardianApiHttpService, GuardianApiHttpService>();
+            services.AddHttpClient<IGuardianScraperHttpService, GuardianScraperHttpService>();
+            services.AddSingleton<IConfigVariables, ConfigVariables>();
+            services.AddSingleton<IQuizService, QuizService>();
+            services.AddSingleton<IQuizMetadataService, QuizMetadataService>();
+            services.AddSingleton<IHtmlService, HtmlService>();
         }
     }
 }

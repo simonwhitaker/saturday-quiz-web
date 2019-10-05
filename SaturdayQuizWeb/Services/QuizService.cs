@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using SaturdayQuizWeb.Model;
 
@@ -7,32 +6,30 @@ namespace SaturdayQuizWeb.Services
 {
     public interface IQuizService
     {
-        Task<Quiz> GetQuiz(string id = null);
-        Task<Quiz> GetQuiz(QuizMetadata quizMetadata);
+        Task<Quiz> GetQuizAsync(string id = null);
+        Task<Quiz> GetQuizAsync(QuizMetadata quizMetadata);
     }
 
     public class QuizService : IQuizService
     {
-        private const string GuardianUrlBase = "https://www.theguardian.com/";
-        
-        private readonly HttpClient _httpClient;
+        private readonly IGuardianScraperHttpService _scraperHttpService;
         private readonly IHtmlService _htmlService;
         private readonly IQuizMetadataService _quizMetadataService;
 
-        public QuizService(IHttpClientFactory httpClientFactory, IHtmlService htmlService, IQuizMetadataService quizMetadataService)
+        public QuizService(IGuardianScraperHttpService scraperHttpService, IHtmlService htmlService, IQuizMetadataService quizMetadataService)
         {
-            _httpClient = httpClientFactory.CreateClient();
+            _scraperHttpService = scraperHttpService;
             _htmlService = htmlService;
             _quizMetadataService = quizMetadataService;
         }
         
-        public async Task<Quiz> GetQuiz(string id = null)
+        public async Task<Quiz> GetQuizAsync(string id = null)
         {
             QuizMetadata quizMetadata;
             
             if (id == null)
             {
-                var quizMetadataList = await _quizMetadataService.GetQuizMetadata(1);
+                var quizMetadataList = await _quizMetadataService.GetQuizMetadataAsync(1);
                 quizMetadata = quizMetadataList.First();
             }
             else
@@ -43,12 +40,12 @@ namespace SaturdayQuizWeb.Services
                 };
             }
 
-            return await GetQuiz(quizMetadata);
+            return await GetQuizAsync(quizMetadata);
         }
 
-        public async Task<Quiz> GetQuiz(QuizMetadata quizMetadata)
+        public async Task<Quiz> GetQuizAsync(QuizMetadata quizMetadata)
         {
-            var quizHtml = await _httpClient.GetStringAsync(GuardianUrlBase + quizMetadata.Id);
+            var quizHtml = await _scraperHttpService.GetQuizPageContentAsync(quizMetadata.Id);
             var questions = _htmlService.FindQuestions(quizHtml);
             return new Quiz
             {

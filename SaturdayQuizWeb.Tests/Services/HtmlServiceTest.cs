@@ -4,11 +4,14 @@ using NUnit.Framework;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
 
-namespace SaturdayQuizWeb.Tests
+namespace SaturdayQuizWeb.Tests.Services
 {
+    [TestFixture]
     public class HtmlServiceTest
     {
+        // Object under test
         private readonly HtmlService _htmlService = new HtmlService();
+        
         private List<Question> _questions;
 
         [SetUp]

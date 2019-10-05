@@ -1,5 +1,4 @@
-﻿using SaturdayQuizWeb.Api;
-using SaturdayQuizWeb.Model;
+﻿using SaturdayQuizWeb.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,21 +8,21 @@ namespace SaturdayQuizWeb.Services
 {
     public interface IQuizMetadataService
     {
-        Task<List<QuizMetadata>> GetQuizMetadata(int count);
+        Task<List<QuizMetadata>> GetQuizMetadataAsync(int count);
     }
 
     public class QuizMetadataService : IQuizMetadataService
     {
-        private readonly IGuardianApi _guardianApi;
+        private readonly IGuardianApiHttpService _guardianApiHttpService;
 
-        public QuizMetadataService(IGuardianApi guardianApi)
+        public QuizMetadataService(IGuardianApiHttpService guardianApiHttpService)
         {
-            _guardianApi = guardianApi;
+            _guardianApiHttpService = guardianApiHttpService;
         }
 
-        public async Task<List<QuizMetadata>> GetQuizMetadata(int count)
+        public async Task<List<QuizMetadata>> GetQuizMetadataAsync(int count)
         {
-            var response = await _guardianApi.ListQuizzes(count);
+            var response = await _guardianApiHttpService.ListQuizzesAsync(count);
 
             if (response == null)
             {

@@ -20,9 +20,9 @@ namespace SaturdayQuizWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<QuizMetadata>>> GetQuizMetadata([FromQuery] int count = DefaultQuizCount)
+        public async Task<ActionResult<List<QuizMetadata>>> GetQuizMetadataAsync([FromQuery] int count = DefaultQuizCount)
         {
-            return await _quizMetadataService.GetQuizMetadata(count);
+            return await _quizMetadataService.GetQuizMetadataAsync(count);
         }
     }
 }
