@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using SaturdayQuizWeb.Api;
 using SaturdayQuizWeb.Services;
 using SaturdayQuizWeb.Utils;
 
@@ -7,17 +9,18 @@ namespace SaturdayQuizWeb.Tests
 {
     public class QuizMetadataServiceTest
     {
-        private IConfiguration Configuration { get; }
+        private static readonly IHttpClientFactory HttpClientFactory = new HttpClientFactory();
+        private static readonly IGuardianApi GuardianApi = new GuardianApi(HttpClientFactory);
 
-        private readonly QuizMetadataService _service = new QuizMetadataService();
-        private readonly ConfigVariables _configVariables;
+        private readonly IQuizMetadataService _service = new QuizMetadataService(GuardianApi);
+        private readonly IConfigVariables _configVariables;
 
         public QuizMetadataServiceTest()
         {
-            Configuration = new ConfigurationBuilder()
+            IConfiguration configuration = new ConfigurationBuilder()
                 .AddUserSecrets<QuizMetadataServiceTest>()
                 .Build();
-            _configVariables = new ConfigVariables(Configuration);
+            _configVariables = new ConfigVariables(configuration);
         }
 
         [Test]
@@ -28,5 +31,10 @@ namespace SaturdayQuizWeb.Tests
             request.Wait();
             Assert.AreEqual(7, request.Result.Count);
         }
+    }
+
+    internal class HttpClientFactory : IHttpClientFactory
+    {
+        public HttpClient CreateClient(string name) => new HttpClient();
     }
 }

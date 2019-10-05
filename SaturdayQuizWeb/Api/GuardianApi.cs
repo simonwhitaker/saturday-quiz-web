@@ -1,26 +1,29 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace SaturdayQuizWeb.Api
 {
-    public class GuardianApi
+    public interface IGuardianApi
     {
-        private const string MimeTypeApplicationJson = "application/json";
+        Task<GuardianApiResponse> ListQuizzes(string apiKey, int pageSize = 5);
+    }
+
+    public class GuardianApi : IGuardianApi
+    {
         private const string UrlBase = "https://content.guardianapis.com/theguardian/";
         private const string ResourceFormat = "series/the-quiz-thomas-eaton?api-key={0}&page-size={1}";
         
         private readonly HttpClient _httpClient;
 
-        public GuardianApi()
+        public GuardianApi(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(UrlBase)
-            };
+            _httpClient = httpClientFactory.CreateClient();
+            _httpClient.BaseAddress = new Uri(UrlBase);
             _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MimeTypeApplicationJson));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
         }
 
         public async Task<GuardianApiResponse> ListQuizzes(string apiKey, int pageSize = 5)

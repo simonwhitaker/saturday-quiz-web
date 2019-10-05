@@ -14,7 +14,12 @@ namespace SaturdayQuizWeb.Services
         }
     }
 
-    public class HtmlService
+    public interface IHtmlService
+    {
+        List<Question> FindQuestions(string html);
+    }
+
+    public class HtmlService : IHtmlService
     {
         private const int NumberOfQuestions = 15;
         private const int NumberOfNormalQuestions = 8;
@@ -27,8 +32,6 @@ namespace SaturdayQuizWeb.Services
 
             for (var number = 1; number <= NumberOfQuestions; number++)
             {
-                string question;
-                string answer;
                 var regex = BuildRegex(number);
 
                 // Find the question
@@ -44,7 +47,7 @@ namespace SaturdayQuizWeb.Services
                     answerStartIndex = questionStartIndex;
                 }
 
-                question = match.Groups[1].Value;
+                var question = match.Groups[1].Value;
 
                 // Find the answer
                 match = regex.Match(html, answerStartIndex);
@@ -54,7 +57,7 @@ namespace SaturdayQuizWeb.Services
                 }
 
                 answerStartIndex = match.Index + match.Length;
-                answer = match.Groups[1].Value;
+                var answer = match.Groups[1].Value;
                 
                 questions.Add(new Question
                 {
