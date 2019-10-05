@@ -18,7 +18,7 @@ namespace SaturdayQuizWeb.Api
         private const string ResourceFormat = "series/the-quiz-thomas-eaton?api-key={0}&page-size={1}";
         
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
+        private readonly IConfigVariables _configVariables;
 
         public GuardianApi(IHttpClientFactory httpClientFactory, IConfigVariables configVariables)
         {
@@ -26,13 +26,16 @@ namespace SaturdayQuizWeb.Api
             _httpClient.BaseAddress = new Uri(UrlBase);
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
-            _apiKey = configVariables.GuardianApiKey;
+            _configVariables = configVariables;
         }
 
         public async Task<GuardianApiResponse> ListQuizzes(int pageSize = 5)
         {
             GuardianApiResponse apiResponse = null;
-            var response = await _httpClient.GetAsync(string.Format(ResourceFormat, _apiKey, pageSize));
+            var response = await _httpClient.GetAsync(string.Format(
+                ResourceFormat,
+                _configVariables.GuardianApiKey,
+                pageSize));
             if (response.IsSuccessStatusCode)
             {
                 apiResponse = await response.Content.ReadAsAsync<GuardianApiResponse>();
