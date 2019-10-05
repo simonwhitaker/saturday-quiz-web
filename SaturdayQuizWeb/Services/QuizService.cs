@@ -7,7 +7,7 @@ namespace SaturdayQuizWeb.Services
 {
     public interface IQuizService
     {
-        Task<Quiz> GetQuiz(string apiKey, string id = null);
+        Task<Quiz> GetQuiz(string id = null);
         Task<Quiz> GetQuiz(QuizMetadata quizMetadata);
     }
 
@@ -26,13 +26,13 @@ namespace SaturdayQuizWeb.Services
             _quizMetadataService = quizMetadataService;
         }
         
-        public async Task<Quiz> GetQuiz(string apiKey, string id = null)
+        public async Task<Quiz> GetQuiz(string id = null)
         {
             QuizMetadata quizMetadata;
             
             if (id == null)
             {
-                var quizMetadataList = await _quizMetadataService.GetQuizMetadata(apiKey, 1);
+                var quizMetadataList = await _quizMetadataService.GetQuizMetadata(1);
                 quizMetadata = quizMetadataList.First();
             }
             else

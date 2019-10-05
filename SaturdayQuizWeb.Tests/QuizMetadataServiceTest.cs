@@ -9,25 +9,24 @@ namespace SaturdayQuizWeb.Tests
 {
     public class QuizMetadataServiceTest
     {
-        private static readonly IHttpClientFactory HttpClientFactory = new HttpClientFactory();
-        private static readonly IGuardianApi GuardianApi = new GuardianApi(HttpClientFactory);
-
-        private readonly IQuizMetadataService _service = new QuizMetadataService(GuardianApi);
-        private readonly IConfigVariables _configVariables;
+        private readonly IQuizMetadataService _quizMetadataService;
 
         public QuizMetadataServiceTest()
         {
-            IConfiguration configuration = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<QuizMetadataServiceTest>()
                 .Build();
-            _configVariables = new ConfigVariables(configuration);
+            var configVariables = new ConfigVariables(configuration);
+            var httpClientFactory = new HttpClientFactory();
+            var guardianApi = new GuardianApi(httpClientFactory, configVariables);
+            _quizMetadataService = new QuizMetadataService(guardianApi);
         }
 
         [Test]
         [Ignore(Consts.IntegrationTest)]
         public void TestGetQuizMetadata()
         {
-            var request = _service.GetQuizMetadata(_configVariables.GuardianApiKey, 7);
+            var request = _quizMetadataService.GetQuizMetadata(7);
             request.Wait();
             Assert.AreEqual(7, request.Result.Count);
         }

@@ -9,7 +9,7 @@ namespace SaturdayQuizWeb.Services
 {
     public interface IQuizMetadataService
     {
-        Task<List<QuizMetadata>> GetQuizMetadata(string apiKey, int count);
+        Task<List<QuizMetadata>> GetQuizMetadata(int count);
     }
 
     public class QuizMetadataService : IQuizMetadataService
@@ -21,9 +21,9 @@ namespace SaturdayQuizWeb.Services
             _guardianApi = guardianApi;
         }
 
-        public async Task<List<QuizMetadata>> GetQuizMetadata(string apiKey, int count)
+        public async Task<List<QuizMetadata>> GetQuizMetadata(int count)
         {
-            var response = await _guardianApi.ListQuizzes(apiKey, count);
+            var response = await _guardianApi.ListQuizzes(count);
 
             if (response == null)
             {
