@@ -15,6 +15,19 @@
         $('#nav-right').click(function(){
             controller.onNext();
         });
+        $(document).keyup(function(e) {
+            switch (e.which) {
+                case 37: // Left
+                    controller.onPrevious();
+                    break;
+                case 39: // Right
+                    controller.onNext();
+                    break;
+                default:
+                    return;
+            }
+            e.preventDefault();
+        });
     };
 
     View.prototype.showTitlePage = function() {
