@@ -61,8 +61,8 @@
             case SceneType.QUESTION:
                 view.showQuestionNumber(question.number);
                 view.showQuestion(
-                    scene.question.question,
-                    scene.question.type === QuestionType.WHAT_LINKS
+                    question.question,
+                    question.type === QuestionType.WHAT_LINKS
                 );
                 view.showAnswer('');
                 view.showQuestionPage();
