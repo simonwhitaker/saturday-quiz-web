@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using RegexToolbox;
 using SaturdayQuizWeb.Model;
@@ -21,6 +22,14 @@ namespace SaturdayQuizWeb.Services
 
     public class HtmlService : IHtmlService
     {
+        private static readonly Regex AnchorTagRegex = new RegexBuilder()
+            .Text("<")
+            .Text("/", RegexQuantifier.ZeroOrOne)
+            .Text("a")
+            .AnyCharacterExcept(">", RegexQuantifier.ZeroOrMore)
+            .Text(">")
+            .BuildRegex();
+
         private const int NumberOfQuestions = 15;
         private const int NumberOfNormalQuestions = 8;
 
@@ -47,7 +56,7 @@ namespace SaturdayQuizWeb.Services
                     answerStartIndex = questionStartIndex;
                 }
 
-                var question = match.Groups[1].Value;
+                var question = StripAnchorTags(match.Groups[1].Value);
 
                 // Find the answer
                 match = regex.Match(html, answerStartIndex);
@@ -57,7 +66,7 @@ namespace SaturdayQuizWeb.Services
                 }
 
                 answerStartIndex = match.Index + match.Length;
-                var answer = match.Groups[1].Value;
+                var answer = StripAnchorTags(match.Groups[1].Value);
                 
                 questions.Add(new Question
                 {
@@ -93,6 +102,8 @@ namespace SaturdayQuizWeb.Services
                 .Text(">")
                 .BuildRegex();
         }
+
+        private static string StripAnchorTags(string source) => AnchorTagRegex.Replace(source, string.Empty);
 
         private static QuestionType GetQuestionType(int questionNumber)
         {

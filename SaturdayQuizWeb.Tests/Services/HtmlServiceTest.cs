@@ -41,7 +41,9 @@ namespace SaturdayQuizWeb.Tests.Services
         {
             Assert.AreEqual(2, _questions[1].Number);
             Assert.AreEqual(QuestionType.Normal, _questions[1].Type);
-            Assert.AreEqual("What are produced at La Masia and La Fábrica?", _questions[1].QuestionText);
+            // Check that normal HTML tags are allowed
+            Assert.AreEqual("What are produced at <i>La Masia</i> and <i>La Fábrica</i>?", _questions[1].QuestionText);
+            // Check that <a> tags are removed
             Assert.AreEqual("Footballers (academies of Barcelona and Real Madrid)", _questions[1].Answer);
         }
 
