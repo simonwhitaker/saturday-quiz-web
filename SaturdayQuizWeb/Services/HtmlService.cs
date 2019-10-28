@@ -24,9 +24,9 @@ namespace SaturdayQuizWeb.Services
     {
         private static readonly Regex AnchorTagRegex = new RegexBuilder()
             .Text("<")
-            .Text("/", RegexQuantifier.ZeroOrOne)
+            .Text("/", ZeroOrOne)
             .Text("a")
-            .AnyCharacterExcept(">", RegexQuantifier.ZeroOrMore)
+            .AnyCharacterExcept(">", ZeroOrMore)
             .Text(">")
             .BuildRegex();
 
