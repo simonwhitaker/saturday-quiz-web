@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SaturdayQuizWeb.Model;
 
@@ -8,6 +9,7 @@ namespace SaturdayQuizWeb.Services
     {
         Task<Quiz> GetQuizAsync(string id = null);
         Task<Quiz> GetQuizAsync(QuizMetadata quizMetadata);
+        Task<Quiz> GetQuizAsync(DateTime date);
     }
 
     public class QuizService : IQuizService
@@ -40,6 +42,12 @@ namespace SaturdayQuizWeb.Services
                 };
             }
 
+            return await GetQuizAsync(quizMetadata);
+        }
+
+        public async Task<Quiz> GetQuizAsync(DateTime date)
+        {
+            var quizMetadata = await _quizMetadataService.GetQuizMetadataAsync(date);
             return await GetQuizAsync(quizMetadata);
         }
 

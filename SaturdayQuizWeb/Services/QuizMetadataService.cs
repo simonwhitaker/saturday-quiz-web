@@ -9,6 +9,7 @@ namespace SaturdayQuizWeb.Services
     public interface IQuizMetadataService
     {
         Task<List<QuizMetadata>> GetQuizMetadataAsync(int count);
+        Task<QuizMetadata> GetQuizMetadataAsync(DateTime date);
     }
 
     public class QuizMetadataService : IQuizMetadataService
@@ -38,6 +39,26 @@ namespace SaturdayQuizWeb.Services
                     Url = item.WebUrl
                 })
                 .ToList();
+        }
+
+        public async Task<QuizMetadata> GetQuizMetadataAsync(DateTime date)
+        {
+            var response = await _guardianApiHttpService.GetQuizByDateAsync(date);
+
+            if (response == null)
+            {
+                throw new Exception("Something went wrong with the Guardian API call");
+            }
+
+            return response.Results
+                .Select(item => new QuizMetadata
+                {
+                    Id = item.Id,
+                    Title = item.WebTitle,
+                    Date = item.WebPublicationDate,
+                    Url = item.WebUrl
+                })
+                .SingleOrDefault();
         }
     }
 }
