@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
@@ -20,7 +21,16 @@ namespace SaturdayQuizWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<Quiz>> GetById([FromQuery] string id = null)
         {
-            return await _quizService.GetQuizAsync(id);
+            try
+            {
+                var quiz = await _quizService.GetQuizAsync(id);
+                return Ok(quiz);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error occurred: {e}");
+                return StatusCode(500, new Error(e));
+            }
         }
     }
 }
