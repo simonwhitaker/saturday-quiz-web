@@ -67,6 +67,12 @@ namespace SaturdayQuizWeb.Services
 
                 answerStartIndex = match.Index + match.Length;
                 var answer = StripAnchorTags(match.Groups[1].Value);
+
+                // Check questions and answers are different
+                if (question.Equals(answer))
+                {
+                    throw new HtmlException($"Parsing error: question and answer {number} are the same");
+                }
                 
                 questions.Add(new Question
                 {
