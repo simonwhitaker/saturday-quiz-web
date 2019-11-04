@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SaturdayQuizWeb.Model;
 
@@ -36,7 +37,8 @@ namespace SaturdayQuizWeb.Services
             {
                 quizMetadata = new QuizMetadata
                 {
-                    Id = id
+                    Id = id,
+                    Date = DateTime.UtcNow
                 };
             }
 
