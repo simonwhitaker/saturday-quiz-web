@@ -108,7 +108,7 @@ namespace SaturdayQuizWeb.Tests.Services
             var quiz = await _quizService.GetQuizAsync(TestQuizId);
             // Then
             Assert.AreEqual(TestQuizId, quiz.Id);
-            Assert.AreEqual(DateTime.MinValue, quiz.Date);
+            Assert.Greater(quiz.Date, DateTime.UtcNow.AddMilliseconds(-100));
             Assert.IsNull(quiz.Title);
             Assert.AreEqual(Questions, quiz.Questions);
         }
