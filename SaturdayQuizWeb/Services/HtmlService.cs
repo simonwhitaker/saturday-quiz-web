@@ -89,6 +89,7 @@ namespace SaturdayQuizWeb.Services
         private static Regex BuildRegex(int questionNumber)
         {
             return new RegexBuilder()
+                .AddLogger(Console.WriteLine, $"Regex {questionNumber}")
                 .WordBoundary()
                 .Text(questionNumber.ToString())
                 .PossibleWhitespace()
