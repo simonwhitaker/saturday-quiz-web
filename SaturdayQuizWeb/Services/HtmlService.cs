@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using RegexToolbox;
 using SaturdayQuizWeb.Model;
 using static RegexToolbox.RegexQuantifier;
+using RegexOptions = RegexToolbox.RegexOptions;
 
 namespace SaturdayQuizWeb.Services
 {
@@ -30,16 +30,22 @@ namespace SaturdayQuizWeb.Services
             .Text(">")
             .BuildRegex();
 
-        private const int NumberOfQuestions = 15;
-        private const int NumberOfNormalQuestions = 8;
+        private static readonly Regex WhatLinksRegex = new RegexBuilder()
+            .Text("what")
+            .Whitespace(OneOrMore)
+            .Text("links")
+            .BuildRegex(RegexOptions.IgnoreCase);
+
+        private const int MinNumberOfQuestions = 15;
 
         public List<Question> FindQuestions(string html)
         {
             var questionStartIndex = 0;
             var answerStartIndex = 0;
             var questions = new List<Question>();
+            var type = QuestionType.Normal;
 
-            for (var number = 1; number <= NumberOfQuestions; number++)
+            for (var number = 1;; number++)
             {
                 var regex = BuildRegex(number);
 
@@ -47,10 +53,28 @@ namespace SaturdayQuizWeb.Services
                 var match = regex.Match(html, questionStartIndex);
                 if (!match.Success)
                 {
+                    if (number > MinNumberOfQuestions)
+                    {
+                        break;
+                    }
                     throw new HtmlException($"Failed to find question {number}");
                 }
 
+                var prevQuestionStartIndex = questionStartIndex;
                 questionStartIndex = match.Index + match.Length;
+
+                if (type == QuestionType.Normal && prevQuestionStartIndex > 0)
+                {
+                    // Check if we've passed "what links"
+                    var previousChunk = html.Substring(
+                        prevQuestionStartIndex,
+                        questionStartIndex - prevQuestionStartIndex);
+                    if (WhatLinksRegex.IsMatch(previousChunk))
+                    {
+                        type = QuestionType.WhatLinks;
+                    }
+                }
+                
                 if (answerStartIndex == 0)
                 {
                     answerStartIndex = questionStartIndex;
@@ -77,7 +101,7 @@ namespace SaturdayQuizWeb.Services
                 questions.Add(new Question
                 {
                     Number = number,
-                    Type = GetQuestionType(number),
+                    Type = type,
                     QuestionText = question,
                     Answer = answer
                 });
@@ -110,10 +134,5 @@ namespace SaturdayQuizWeb.Services
         }
 
         private static string StripAnchorTags(string source) => AnchorTagRegex.Replace(source, string.Empty);
-
-        private static QuestionType GetQuestionType(int questionNumber)
-        {
-            return questionNumber <= NumberOfNormalQuestions ? QuestionType.Normal : QuestionType.WhatLinks;
-        }
     }
 }
