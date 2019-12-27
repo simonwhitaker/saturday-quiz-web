@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
@@ -21,14 +21,15 @@ namespace SaturdayQuizWeb.UnitTests.Services
         private const string TestQuestionText = "test question text";
         private const string TestQuestionAnswer = "test question answer";
         private const string TestHtmlContent = "test html content";
-        private static readonly QuizMetadata QuizMetadata = new QuizMetadata
+        
+        private readonly QuizMetadata _quizMetadata = new QuizMetadata
         {
             Id = TestQuizId,
             Date = TestQuizDate,
             Title = TestQuizTitle,
             Url = TestQuizUrl
         };
-        private static readonly List<Question> Questions = new List<Question>
+        private readonly List<Question> _questions = new List<Question>
         {
             new Question
             {
@@ -40,77 +41,71 @@ namespace SaturdayQuizWeb.UnitTests.Services
         };
 
         // Mocks
-        private static readonly Mock<IGuardianScraperHttpService> MockScraperHttpService = new Mock<IGuardianScraperHttpService>();
-        private static readonly Mock<IHtmlService> MockHtmlService = new Mock<IHtmlService>();
-        private static readonly Mock<IQuizMetadataService> MockQuizMetadataService = new Mock<IQuizMetadataService>();
+        private readonly IGuardianScraperHttpService _mockScraperHttpService;
+        private readonly IHtmlService _mockHtmlService;
+        private readonly IQuizMetadataService _mockQuizMetadataService;
         
         // Object under test
-        private readonly IQuizService _quizService = new QuizService(
-            MockScraperHttpService.Object,
-            MockHtmlService.Object,
-            MockQuizMetadataService.Object);
-        
+        private readonly IQuizService _quizService;
+
+        public QuizServiceTest()
+        {
+            _mockScraperHttpService = Substitute.For<IGuardianScraperHttpService>();
+            _mockHtmlService = Substitute.For<IHtmlService>();
+            _mockQuizMetadataService = Substitute.For<IQuizMetadataService>();
+            _quizService = new QuizService(
+                _mockScraperHttpService,
+                _mockHtmlService,
+                _mockQuizMetadataService);
+        }
+
         [Test]
         public async Task GivenScraperServiceReturnsContent_WhenGetQuizAsyncByMetadata_ThenExpectedQuizReturned()
         {
             // Given
-            MockScraperHttpService
-                .Setup(service => service.GetQuizPageContentAsync(TestQuizId))
-                .ReturnsAsync(TestHtmlContent);
-            MockHtmlService
-                .Setup(service => service.FindQuestions(TestHtmlContent))
-                .Returns(Questions);
+            _mockScraperHttpService.GetQuizPageContentAsync(TestQuizId).Returns(TestHtmlContent);
+            _mockHtmlService.FindQuestions(TestHtmlContent).Returns(_questions);
             // When
-            var quiz = await _quizService.GetQuizAsync(QuizMetadata);
+            var quiz = await _quizService.GetQuizAsync(_quizMetadata);
             // Then
             Assert.AreEqual(TestQuizId, quiz.Id);
             Assert.AreEqual(TestQuizDate, quiz.Date);
             Assert.AreEqual(TestQuizTitle, quiz.Title);
-            Assert.AreEqual(Questions, quiz.Questions);
+            Assert.AreEqual(_questions, quiz.Questions);
         }
         
         [Test]
         public async Task GivenScraperServiceReturnsContent_WhenGetQuizAsyncWithNullId_ThenExpectedQuizReturned()
         {
             // Given
-            MockQuizMetadataService
-                .Setup(service => service.GetQuizMetadataAsync(1))
-                .ReturnsAsync(new List<QuizMetadata>
-                {
-                    QuizMetadata
-                });
-            MockScraperHttpService
-                .Setup(service => service.GetQuizPageContentAsync(TestQuizId))
-                .ReturnsAsync(TestHtmlContent);
-            MockHtmlService
-                .Setup(service => service.FindQuestions(TestHtmlContent))
-                .Returns(Questions);
+            _mockQuizMetadataService.GetQuizMetadataAsync(1).Returns(new List<QuizMetadata>
+            {
+                _quizMetadata
+            });
+            _mockScraperHttpService.GetQuizPageContentAsync(TestQuizId).Returns(TestHtmlContent);
+            _mockHtmlService.FindQuestions(TestHtmlContent).Returns(_questions);
             // When
             var quiz = await _quizService.GetQuizAsync();
             // Then
             Assert.AreEqual(TestQuizId, quiz.Id);
             Assert.AreEqual(TestQuizDate, quiz.Date);
             Assert.AreEqual(TestQuizTitle, quiz.Title);
-            Assert.AreEqual(Questions, quiz.Questions);
+            Assert.AreEqual(_questions, quiz.Questions);
         }
         
         [Test]
         public async Task GivenScraperServiceReturnsContent_WhenGetQuizAsyncWithNonNullId_ThenExpectedQuizReturned()
         {
             // Given
-            MockScraperHttpService
-                .Setup(service => service.GetQuizPageContentAsync(TestQuizId))
-                .ReturnsAsync(TestHtmlContent);
-            MockHtmlService
-                .Setup(service => service.FindQuestions(TestHtmlContent))
-                .Returns(Questions);
+            _mockScraperHttpService.GetQuizPageContentAsync(TestQuizId).Returns(TestHtmlContent);
+            _mockHtmlService.FindQuestions(TestHtmlContent).Returns(_questions);
             // When
             var quiz = await _quizService.GetQuizAsync(TestQuizId);
             // Then
             Assert.AreEqual(TestQuizId, quiz.Id);
             Assert.Greater(quiz.Date, DateTime.UtcNow.AddMilliseconds(-100));
             Assert.IsNull(quiz.Title);
-            Assert.AreEqual(Questions, quiz.Questions);
+            Assert.AreEqual(_questions, quiz.Questions);
         }
     }
 }
