@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using NUnit.Framework;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
@@ -11,16 +13,24 @@ namespace SaturdayQuizWeb.UnitTests.Services
     {
         // Object under test
         private readonly HtmlService _htmlService = new HtmlService();
-        
-        private List<Question> _questions;
 
-        [SetUp]
-        public void SetUp()
+        private readonly List<Question> _questions;
+
+        public HtmlServiceTest()
         {
-            var html = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/TestData/2019_07_20_quiz.html");
-            _questions = _htmlService.FindQuestions(html);
+            using (var zip = ZipFile.OpenRead(TestContext.CurrentContext.TestDirectory + "/TestData/test_data.zip"))
+            using (var stream = zip.GetEntry("2019_07_20_quiz.html")?.Open())
+            {
+                if (stream == null)
+                {
+                    throw new Exception();
+                }
+
+                var html = new StreamReader(stream).ReadToEnd();
+                _questions = _htmlService.FindQuestions(html);
+            }
         }
-        
+
         [Test]
         public void TestQuestionCount()
         {
