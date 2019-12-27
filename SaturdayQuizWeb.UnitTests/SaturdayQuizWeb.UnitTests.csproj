@@ -26,16 +26,8 @@
 
     <ItemGroup>
       <None Remove="TestData\2019_07_20_quiz.html" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="TestData\2019_07_20_quiz.zip" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="TestData\test_data.zip" />
-      <Content Include="TestData\test_data.zip">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Content Include="TestData\2019_07_20_quiz.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 
