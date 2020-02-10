@@ -32,22 +32,22 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                 _quizMetadataService);
         }
 
-        [Test]
-        public void TestGetQuizMetadata()
+        [TestCase(7)]
+        public void TestGetQuizMetadata(int numberOfQuizzes)
         {
-            var request = _quizMetadataService.GetQuizMetadataAsync(7);
+            var request = _quizMetadataService.GetQuizMetadataAsync(numberOfQuizzes);
             request.Wait();
-            Assert.AreEqual(7, request.Result.Count);
+            Assert.AreEqual(numberOfQuizzes, request.Result.Count);
         }
         
-        [Test]
-        public async Task WhenLast50QuizzesAreLoaded_ThenAllAreSuccessful()
+        [TestCase(50)]
+        public async Task WhenLastNQuizzesAreLoaded_ThenAllAreSuccessful(int numberOfQuizzes)
         {
             // When
-            var quizMetadataList = await _quizMetadataService.GetQuizMetadataAsync(50);
+            var quizMetadataList = await _quizMetadataService.GetQuizMetadataAsync(numberOfQuizzes);
             var failedCount = 0;
             // Then
-            for (var index = 0; index < 50; index++)
+            for (var index = 0; index < numberOfQuizzes; index++)
             {
                 var quizMetadata = quizMetadataList[index];
                 try
