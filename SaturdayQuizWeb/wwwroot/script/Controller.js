@@ -61,7 +61,7 @@
             case SceneType.QUESTION:
                 view.showQuestionNumber(question.number);
                 view.showQuestion(
-                    question.question,
+                    question.questionHtml,
                     question.type === QuestionType.WHAT_LINKS
                 );
                 view.showAnswer('');
@@ -74,10 +74,10 @@
             case SceneType.QUESTION_ANSWER:
                 view.showQuestionNumber(question.number);
                 view.showQuestion(
-                    question.question,
+                    question.questionHtml,
                     question.type === QuestionType.WHAT_LINKS
                 );
-                view.showAnswer(question.answer);
+                view.showAnswer(question.answerHtml);
                 view.showQuestionPage();
                 break;
             case SceneType.END_TITLE:

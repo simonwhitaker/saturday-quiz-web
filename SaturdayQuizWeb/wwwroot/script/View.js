@@ -67,12 +67,12 @@
         $('#question-number').text(number + '.');
     };
     
-    View.prototype.showQuestion = function(question, isWhatLinks) {
-        $('#question').html(question);
+    View.prototype.showQuestion = function(questionHtml, isWhatLinks) {
+        $('#question').html(questionHtml);
         $('#question-what-links').toggleClass('visible', isWhatLinks);
     };
     
-    View.prototype.showAnswer = function(answer) {
-        $('#answer').html(answer);
+    View.prototype.showAnswer = function(answerHtml) {
+        $('#answer').html(answerHtml);
     };
 }

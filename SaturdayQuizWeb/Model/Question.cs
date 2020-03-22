@@ -8,6 +8,11 @@ namespace SaturdayQuizWeb.Model
         public QuestionType Type { get; set; }
         [JsonProperty("question")]
         public string QuestionText { get; set; }
-        public string Answer { get; set; }
+        [JsonProperty("questionHtml")]
+        public string QuestionHtml { get; set; }
+        [JsonProperty("answer")]
+        public string AnswerText { get; set; }
+        [JsonProperty("answerHtml")]
+        public string AnswerHtml { get; set; }
     }
 }

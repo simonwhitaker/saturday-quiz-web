@@ -70,7 +70,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
         {
             foreach (var q in quiz.Questions)
             {
-                Console.WriteLine($"{q.Number}. {q.Type} {q.QuestionText} / {q.Answer}");
+                Console.WriteLine($"{q.Number}. {q.Type} {q.QuestionText} / {q.AnswerText}");
             }
             Console.WriteLine();
         }

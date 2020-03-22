@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Web;
 using RegexToolbox;
 using SaturdayQuizWeb.Model;
 using static RegexToolbox.RegexQuantifier;
@@ -27,6 +28,12 @@ namespace SaturdayQuizWeb.Services
             .Text("/", ZeroOrOne)
             .Text("a")
             .AnyCharacterExcept(">", ZeroOrMore)
+            .Text(">")
+            .BuildRegex();
+
+        private static readonly Regex HtmlTagRegex = new RegexBuilder()
+            .Text("<")
+            .AnyCharacter(OneOrMore.ButAsFewAsPossible)
             .Text(">")
             .BuildRegex();
 
@@ -80,7 +87,7 @@ namespace SaturdayQuizWeb.Services
                     answerStartIndex = questionStartIndex;
                 }
 
-                var question = StripAnchorTags(match.Groups[1].Value);
+                var question = match.Groups[1].Value;
 
                 // Find the answer
                 match = regex.Match(html, answerStartIndex);
@@ -90,7 +97,7 @@ namespace SaturdayQuizWeb.Services
                 }
 
                 answerStartIndex = match.Index + match.Length;
-                var answer = StripAnchorTags(match.Groups[1].Value);
+                var answer = match.Groups[1].Value;
 
                 // Check questions and answers are different
                 if (question.Equals(answer))
@@ -102,8 +109,10 @@ namespace SaturdayQuizWeb.Services
                 {
                     Number = number,
                     Type = type,
-                    QuestionText = question,
-                    Answer = answer
+                    QuestionText = MakeTextSafe(question),
+                    QuestionHtml = MakeHtmlSafe(question),
+                    AnswerText = MakeTextSafe(answer),
+                    AnswerHtml = MakeHtmlSafe(answer)
                 });
             }
 
@@ -133,6 +142,20 @@ namespace SaturdayQuizWeb.Services
                 .BuildRegex();
         }
 
-        private static string StripAnchorTags(string source) => AnchorTagRegex.Replace(source, string.Empty);
+        private static string MakeHtmlSafe(string source)
+        {
+            return AnchorTagRegex.Replace(source, string.Empty);
+        }
+
+        private static string MakeTextSafe(string source)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                return source;
+            }
+            
+            var safeSource = HttpUtility.HtmlDecode(source);
+            return HtmlTagRegex.Replace(safeSource, string.Empty);
+        }
     }
 }

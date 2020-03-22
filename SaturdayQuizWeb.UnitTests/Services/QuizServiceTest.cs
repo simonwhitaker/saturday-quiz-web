@@ -36,7 +36,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
                 Number = TestQuestionNumber,
                 Type = TestQuestionType,
                 QuestionText = TestQuestionText,
-                Answer = TestQuestionAnswer
+                AnswerText = TestQuestionAnswer
             }
         };
 
