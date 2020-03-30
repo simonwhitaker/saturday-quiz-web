@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
 using RegexToolbox;
+using RegexToolbox.Extensions;
 using SaturdayQuizWeb.Model;
 using static RegexToolbox.RegexQuantifier;
 using RegexOptions = RegexToolbox.RegexOptions;
@@ -144,7 +145,7 @@ namespace SaturdayQuizWeb.Services
 
         private static string MakeHtmlSafe(string source)
         {
-            return AnchorTagRegex.Replace(source, string.Empty);
+            return source.Remove(AnchorTagRegex);
         }
 
         private static string MakeTextSafe(string source)
@@ -155,7 +156,7 @@ namespace SaturdayQuizWeb.Services
             }
             
             var safeSource = HttpUtility.HtmlDecode(source);
-            return HtmlTagRegex.Replace(safeSource, string.Empty);
+            return safeSource.Remove(HtmlTagRegex);
         }
     }
 }
