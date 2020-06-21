@@ -5,6 +5,7 @@ using System.Web;
 using RegexToolbox;
 using RegexToolbox.Extensions;
 using SaturdayQuizWeb.Model;
+using SaturdayQuizWeb.Utils;
 using static RegexToolbox.RegexQuantifier;
 using RegexOptions = RegexToolbox.RegexOptions;
 
@@ -125,19 +126,19 @@ namespace SaturdayQuizWeb.Services
             return new RegexBuilder()
                 .WordBoundary()
                 .Text(questionNumber.ToString())
-                .PossibleWhitespace()
-                .Text("</strong").PossibleWhitespace().Text(">")
-                .PossibleWhitespace()
+                .PossibleHtmlWhitespace()
+                .Text("</strong").PossibleHtmlWhitespace().Text(">")
+                .PossibleHtmlWhitespace()
                 // Capture group: the question/answer text we want to extract
                 .StartGroup()
                 .AnyCharacter(OneOrMore.ButAsFewAsPossible)
                 .EndGroup()
                 // Optional full stop (to remove it from the end of the answer)
                 .Text(".", ZeroOrOne)
-                .PossibleWhitespace()
+                .PossibleHtmlWhitespace()
                 .Text("<")
                 .AnyOf("br", "/p", "p", "/strong")
-                .PossibleWhitespace()
+                .PossibleHtmlWhitespace()
                 .Text("/", ZeroOrOne)
                 .Text(">")
                 .BuildRegex();

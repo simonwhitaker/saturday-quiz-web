@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +46,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
         {
             // When
             var quizMetadataList = await _quizMetadataService.GetQuizMetadataAsync(numberOfQuizzes);
-            var failedCount = 0;
+            var failedDates = new List<string>();
             // Then
             for (var index = 0; index < numberOfQuizzes; index++)
             {
@@ -58,12 +59,12 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                 }
                 catch (Exception e)
                 {
-                    failedCount++;
+                    failedDates.Add(quizMetadata.Date.ToShortDateString());
                     Console.WriteLine($"Index {index} failed: {e.Message} ({quizMetadata.Url})");
                 }
             }
             
-            Assert.AreEqual(0, failedCount);
+            Assert.That(failedDates, Is.Empty);
         }
 
         private static void PrintQuiz(Quiz quiz)
