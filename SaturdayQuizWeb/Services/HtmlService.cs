@@ -41,7 +41,7 @@ namespace SaturdayQuizWeb.Services
 
         private static readonly Regex WhatLinksRegex = new RegexBuilder()
             .Text("what")
-            .Whitespace(OneOrMore)
+            .HtmlWhitespace()
             .Text("links")
             .BuildRegex(RegexOptions.IgnoreCase);
 
@@ -127,7 +127,7 @@ namespace SaturdayQuizWeb.Services
                 .WordBoundary()
                 .Text(questionNumber.ToString())
                 .PossibleHtmlWhitespace()
-                .Text("</strong").PossibleHtmlWhitespace().Text(">")
+                .Text("</strong").PossibleWhitespace().Text(">")
                 .PossibleHtmlWhitespace()
                 // Capture group: the question/answer text we want to extract
                 .StartGroup()
@@ -138,7 +138,7 @@ namespace SaturdayQuizWeb.Services
                 .PossibleHtmlWhitespace()
                 .Text("<")
                 .AnyOf("br", "/p", "p", "/strong")
-                .PossibleHtmlWhitespace()
+                .PossibleWhitespace()
                 .Text("/", ZeroOrOne)
                 .Text(">")
                 .BuildRegex();

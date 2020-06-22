@@ -55,12 +55,13 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                 {
                     var quiz = await _quizService.GetQuizAsync(quizMetadata.Id);
                     Console.WriteLine($"Index {index} successful");
-                    PrintQuiz(quiz);
+                    // PrintQuiz(quiz);
                 }
                 catch (Exception e)
                 {
-                    failedDates.Add(quizMetadata.Date.ToShortDateString());
-                    Console.WriteLine($"Index {index} failed: {e.Message} ({quizMetadata.Url})");
+                    var dateString = quizMetadata.Date.ToShortDateString();
+                    failedDates.Add(dateString);
+                    Console.WriteLine($"Index {index} ({dateString}) failed: {e.Message} ({quizMetadata.Url})");
                 }
             }
             
