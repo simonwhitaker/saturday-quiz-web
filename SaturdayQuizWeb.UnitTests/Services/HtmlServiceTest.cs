@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services;
@@ -12,12 +13,12 @@ namespace SaturdayQuizWeb.UnitTests.Services
         // Object under test
         private readonly HtmlService _htmlService = new HtmlService();
         
-        private readonly List<Question> _questions;
+        private readonly IList<Question> _questions;
 
         public HtmlServiceTest()
         {
             var html = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/TestData/2019_07_20_quiz.html");
-            _questions = _htmlService.FindQuestions(html);
+            _questions = _htmlService.FindQuestions(html).ToList();
         }
         
         [Test]

@@ -20,7 +20,7 @@ namespace SaturdayQuizWeb.Services
 
     public interface IHtmlService
     {
-        List<Question> FindQuestions(string html);
+        IEnumerable<Question> FindQuestions(string html);
     }
 
     public class HtmlService : IHtmlService
@@ -47,7 +47,7 @@ namespace SaturdayQuizWeb.Services
 
         private const int MinNumberOfQuestions = 15;
 
-        public List<Question> FindQuestions(string html)
+        public IEnumerable<Question> FindQuestions(string html)
         {
             var questionStartIndex = 0;
             var answerStartIndex = 0;
