@@ -12,8 +12,8 @@ namespace SaturdayQuizWeb.Services.Parsing
 
     public class SectionExtractor : ISectionExtractor
     {
-        private const int MinQuestionCount = 10;
-        private static readonly IEnumerable<int> MinQuestionNumbers = Enumerable.Range(1, MinQuestionCount);
+        private static readonly IEnumerable<int> MinQuestionNumbers =
+            Enumerable.Range(1, ParsingConstants.MinimumQuestionCount);
 
         public Sections ExtractSections(string wholePageHtml)
         {

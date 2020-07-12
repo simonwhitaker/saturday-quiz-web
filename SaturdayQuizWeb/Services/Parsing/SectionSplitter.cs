@@ -14,8 +14,6 @@ namespace SaturdayQuizWeb.Services.Parsing
 
     public class SectionSplitter : ISectionSplitter
     {
-        private const string WhatLinks = "what links";
-
         private static readonly Regex MultipleWhitespaceRegex = new RegexBuilder()
             .Whitespace(AtLeast(2))
             .BuildRegex();
@@ -28,7 +26,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             var expectedNextQuestionNumber = 1;
             for (var index = 0; index < splitSection.Count; index++)
             {
-                if (splitSection[index].StartsWith(WhatLinks, StringComparison.OrdinalIgnoreCase))
+                if (splitSection[index].StartsWith(ParsingConstants.WhatLinks, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }

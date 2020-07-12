@@ -42,7 +42,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             var questions = ProcessQuestionsSection(questionsSection);
             ProcessAnswersSection(answersSection, questions);
             AddPlainTextStrings(questions);
-            
+
             return questions;
         }
 
@@ -53,7 +53,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             var questionType = QuestionType.Normal;
             foreach (var question in questionsSection)
             {
-                if (question.StartsWith("what links", StringComparison.OrdinalIgnoreCase))
+                if (question.StartsWith(ParsingConstants.WhatLinks, StringComparison.OrdinalIgnoreCase))
                 {
                     questionType = QuestionType.WhatLinks;
                     continue;
@@ -83,7 +83,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             {
                 throw new ParsingException($"Found {questions.Count} questions but {answersSectionList.Count} answers");
             }
-            
+
             for (var i = 0; i < answersSectionList.Count; i++)
             {
                 var answer = answersSectionList[i];
@@ -96,7 +96,7 @@ namespace SaturdayQuizWeb.Services.Parsing
                 questions[i].AnswerHtml = match.Groups[GroupNameText].Value;
             }
         }
-        
+
         private void AddPlainTextStrings(IList<Question> questions)
         {
             foreach (var question in questions)
@@ -112,7 +112,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             {
                 return source;
             }
-            
+
             var safeSource = HttpUtility.HtmlDecode(source);
             return safeSource.Remove(HtmlTagRegex);
         }
