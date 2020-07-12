@@ -10,7 +10,6 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
     public class QuestionAssemblerTests
     {
         private readonly IQuestionAssembler _questionAssembler = new QuestionAssembler();
-        private IList<Question> _questions;
 
         private static readonly IEnumerable<string> QuestionsSection = new List<string>
         {
@@ -51,16 +50,11 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
             "15 Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead."
         };
 
-        [SetUp]
-        public void SetUp()
-        {
-            _questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
-        }
-
         [Test]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionCountIs15()
         {
-            Assert.That(_questions.Count, Is.EqualTo(15));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions.Count, Is.EqualTo(15));
         }
 
         [TestCase(0, 1)]
@@ -80,7 +74,8 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         [TestCase(14, 15)]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionNumberIsCorrect(int questionIndex, int expectedQuestionNumber)
         {
-            Assert.That(_questions[questionIndex].Number, Is.EqualTo(expectedQuestionNumber));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions[questionIndex].Number, Is.EqualTo(expectedQuestionNumber));
         }
 
         [TestCase(0, QuestionType.Normal)]
@@ -100,7 +95,8 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         [TestCase(14, QuestionType.WhatLinks)]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionTypeIsCorrect(int questionIndex, QuestionType expectedQuestionType)
         {
-            Assert.That(_questions[questionIndex].Type, Is.EqualTo(expectedQuestionType));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions[questionIndex].Type, Is.EqualTo(expectedQuestionType));
         }
 
         [TestCase(0, "Which Nazi leader died in Paddington in 1981?")]
@@ -120,7 +116,8 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         [TestCase(14, "Prince of Morocco (Au); Prince of Arragon (Ag); Bassanio (Pb)?")]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionTextIsCorrect(int questionIndex, string expectedQuestionText)
         {
-            Assert.That(_questions[questionIndex].QuestionText, Is.EqualTo(expectedQuestionText));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions[questionIndex].QuestionText, Is.EqualTo(expectedQuestionText));
         }
 
         [TestCase(0, "Which Nazi leader died in Paddington in 1981?")]
@@ -140,7 +137,8 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         [TestCase(14, "Prince of Morocco (Au); Prince of Arragon (Ag); Bassanio (Pb)?")]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionHtmlIsCorrect(int questionIndex, string expectedQuestionHtml)
         {
-            Assert.That(_questions[questionIndex].QuestionHtml, Is.EqualTo(expectedQuestionHtml));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions[questionIndex].QuestionHtml, Is.EqualTo(expectedQuestionHtml));
         }
 
         [TestCase(0, "Albert Speer")]
@@ -160,7 +158,8 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         [TestCase(14, "Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead")]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenAnswerTextIsCorrect(int questionIndex, string expectedAnswerText)
         {
-            Assert.That(_questions[questionIndex].AnswerText, Is.EqualTo(expectedAnswerText));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions[questionIndex].AnswerText, Is.EqualTo(expectedAnswerText));
         }
 
         [TestCase(0, "Albert Speer")]
@@ -180,7 +179,8 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         [TestCase(14, "Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead")]
         public void GivenQuestionAndAnswerSections_WhenAssembled_ThenAnswerHtmlIsCorrect(int questionIndex, string expectedAnswerHtml)
         {
-            Assert.That(_questions[questionIndex].AnswerHtml, Is.EqualTo(expectedAnswerHtml));
+            var questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
+            Assert.That(questions[questionIndex].AnswerHtml, Is.EqualTo(expectedAnswerHtml));
         }
 
         [Test]
@@ -195,11 +195,11 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
             };
 
             var answersSection = new List<string>();
-            
+
             // When
             var exception = Assert.Throws<ParsingException>(() =>
                 _questionAssembler.AssembleQuestions(questionsSection, answersSection));
-            
+
             // Then
             Assert.That(exception.Message, Is.EqualTo("Question text in unexpected format: This shouldn't be here"));
         }
@@ -224,11 +224,11 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
                 "4 Danish flag.",
                 "5 Der Blaue Reiter (Blue Rider)."
             };
-            
+
             // When
             var exception = Assert.Throws<ParsingException>(() =>
                 _questionAssembler.AssembleQuestions(questionsSection, answersSection));
-            
+
             // Then
             Assert.That(exception.Message, Is.EqualTo("Found 4 questions but 5 answers"));
         }
