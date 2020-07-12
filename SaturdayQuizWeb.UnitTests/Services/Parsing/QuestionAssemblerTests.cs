@@ -1,28 +1,64 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SaturdayQuizWeb.Model;
-using SaturdayQuizWeb.Services;
+using SaturdayQuizWeb.Services.Parsing;
 
-namespace SaturdayQuizWeb.UnitTests.Services
+namespace SaturdayQuizWeb.UnitTests.Services.Parsing
 {
     [TestFixture]
-    public class HtmlServiceTest
+    public class QuestionAssemblerTests
     {
-        // Object under test
-        private readonly HtmlService _htmlService = new HtmlService();
-        
-        private readonly IList<Question> _questions;
+        private readonly IQuestionAssembler _questionAssembler = new QuestionAssembler();
+        private IList<Question> _questions;
 
-        public HtmlServiceTest()
+        private static readonly IEnumerable<string> QuestionsSection = new List<string>
         {
-            var html = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/TestData/2019_07_20_quiz.html");
-            _questions = _htmlService.FindQuestions(html).ToList();
+            "1 Which Nazi leader died in Paddington in 1981?",
+            "2 What are produced at <i>La Masia</i> &amp; <i>La Fábrica</i>?",
+            "3 In publishing, what does ISBN stand for?",
+            "4 Adopted in 1625, what symbol is the Dannebrog?",
+            "5 Gabriele Münter was a founder member of what expressionist group?",
+            "6 What was nicknamed the Honourable John Company?",
+            "7 Which country separates Guyana and French Guiana?",
+            "8 In what novel is Constance unhappily married to Sir Clifford?",
+            "What links:",
+            "9 Asgard and Midgard, in the form of a rainbow?",
+            "10 Singer O’Dowd; outlaw McCarty; slugger Ruth; bank robber Nelson?",
+            "11 Statant; sejant; rampant; passant; dormant?",
+            "12 Victoria Embankment; Cardiff City Hall; Colchester station?",
+            "13 Khumbu icefall; Kangshung face; Hornbein couloir; Hillary step?",
+            "14 Prayers at 6am; 0 degrees longitude; 2, 3, 5, 7, etc?",
+            "15 Prince of Morocco (Au); Prince of Arragon (Ag); Bassanio (Pb)?"
+        };
+
+        private static readonly IEnumerable<string> AnswersSection = new List<string>
+        {
+            "1 Albert Speer.",
+            "2 Footballers (academies of <i>Barcelona</i> and <i>Real Madrid</i>).",
+            "3 International Standard Book Number.",
+            "4 Danish flag.",
+            "5 Der Blaue Reiter (Blue Rider).",
+            "6 East India Company.",
+            "7 Suriname.",
+            "8 Lady Chatterley’s Lover.",
+            "9 Bifrost (bridge in Norse myth, linking gods’ realm and Earth).",
+            "10 Young nicknames: Boy George; Billy the Kid; Babe Ruth; Baby Face Nelson.",
+            "11 Attitudes of animals in heraldry: standing; sitting; rearing; walking; lying down.",
+            "12 Statues of Boudicca.",
+            "13 Parts of Mount Everest.",
+            "14 Prime: canonical hour of prayer; prime meridian; prime numbers.",
+            "15 Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead."
+        };
+
+        [SetUp]
+        public void SetUp()
+        {
+            _questions = _questionAssembler.AssembleQuestions(QuestionsSection, AnswersSection).ToList();
         }
-        
+
         [Test]
-        public void GivenQuizIsLoaded_WhenQuestionCount_ThenCountIs15()
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionCountIs15()
         {
             Assert.That(_questions.Count, Is.EqualTo(15));
         }
@@ -42,7 +78,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         [TestCase(12, 13)]
         [TestCase(13, 14)]
         [TestCase(14, 15)]
-        public void GivenQuizIsLoaded_WhenQuestionNumber_ThenNumberIsCorrect(int questionIndex, int expectedQuestionNumber)
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionNumberIsCorrect(int questionIndex, int expectedQuestionNumber)
         {
             Assert.That(_questions[questionIndex].Number, Is.EqualTo(expectedQuestionNumber));
         }
@@ -62,7 +98,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         [TestCase(12, QuestionType.WhatLinks)]
         [TestCase(13, QuestionType.WhatLinks)]
         [TestCase(14, QuestionType.WhatLinks)]
-        public void GivenQuizIsLoaded_WhenQuestionType_ThenTypeIsCorrect(int questionIndex, QuestionType expectedQuestionType)
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionTypeIsCorrect(int questionIndex, QuestionType expectedQuestionType)
         {
             Assert.That(_questions[questionIndex].Type, Is.EqualTo(expectedQuestionType));
         }
@@ -82,7 +118,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         [TestCase(12, "Khumbu icefall; Kangshung face; Hornbein couloir; Hillary step?")]
         [TestCase(13, "Prayers at 6am; 0 degrees longitude; 2, 3, 5, 7, etc?")]
         [TestCase(14, "Prince of Morocco (Au); Prince of Arragon (Ag); Bassanio (Pb)?")]
-        public void GivenQuizIsLoaded_WhenQuestionText_ThenTextIsCorrect(int questionIndex, string expectedQuestionText)
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionTextIsCorrect(int questionIndex, string expectedQuestionText)
         {
             Assert.That(_questions[questionIndex].QuestionText, Is.EqualTo(expectedQuestionText));
         }
@@ -102,7 +138,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         [TestCase(12, "Khumbu icefall; Kangshung face; Hornbein couloir; Hillary step?")]
         [TestCase(13, "Prayers at 6am; 0 degrees longitude; 2, 3, 5, 7, etc?")]
         [TestCase(14, "Prince of Morocco (Au); Prince of Arragon (Ag); Bassanio (Pb)?")]
-        public void GivenQuizIsLoaded_WhenQuestionHtml_ThenHtmlIsCorrect(int questionIndex, string expectedQuestionHtml)
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenQuestionHtmlIsCorrect(int questionIndex, string expectedQuestionHtml)
         {
             Assert.That(_questions[questionIndex].QuestionHtml, Is.EqualTo(expectedQuestionHtml));
         }
@@ -122,7 +158,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         [TestCase(12, "Parts of Mount Everest")]
         [TestCase(13, "Prime: canonical hour of prayer; prime meridian; prime numbers")]
         [TestCase(14, "Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead")]
-        public void GivenQuizIsLoaded_WhenAnswerText_ThenTextIsCorrect(int questionIndex, string expectedAnswerText)
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenAnswerTextIsCorrect(int questionIndex, string expectedAnswerText)
         {
             Assert.That(_questions[questionIndex].AnswerText, Is.EqualTo(expectedAnswerText));
         }
@@ -142,9 +178,59 @@ namespace SaturdayQuizWeb.UnitTests.Services
         [TestCase(12, "Parts of Mount Everest")]
         [TestCase(13, "Prime: canonical hour of prayer; prime meridian; prime numbers")]
         [TestCase(14, "Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead")]
-        public void GivenQuizIsLoaded_WhenAnswerHtml_ThenHtmlIsCorrect(int questionIndex, string expectedAnswerHtml)
+        public void GivenQuestionAndAnswerSections_WhenAssembled_ThenAnswerHtmlIsCorrect(int questionIndex, string expectedAnswerHtml)
         {
             Assert.That(_questions[questionIndex].AnswerHtml, Is.EqualTo(expectedAnswerHtml));
+        }
+
+        [Test]
+        public void GivenQuestionInWrongFormat_WhenAssembled_ThenExceptionIsThrown()
+        {
+            // Given
+            var questionsSection = new List<string>
+            {
+                "1 Which Nazi leader died in Paddington in 1981?",
+                "This shouldn't be here",
+                "2 What are produced at <i>La Masia</i> &amp; <i>La Fábrica</i>?"
+            };
+
+            var answersSection = new List<string>();
+            
+            // When
+            var exception = Assert.Throws<ParsingException>(() =>
+                _questionAssembler.AssembleQuestions(questionsSection, answersSection));
+            
+            // Then
+            Assert.That(exception.Message, Is.EqualTo("Question text in unexpected format: This shouldn't be here"));
+        }
+
+        [Test]
+        public void GivenQuestionAndAnswerCountsAreNotEqual_WhenAssembled_ThenExceptionIsThrown()
+        {
+            // Given
+            var questionsSection = new List<string>
+            {
+                "1 Which Nazi leader died in Paddington in 1981?",
+                "2 What are produced at <i>La Masia</i> &amp; <i>La Fábrica</i>?",
+                "3 In publishing, what does ISBN stand for?",
+                "4 Adopted in 1625, what symbol is the Dannebrog?"
+            };
+
+            var answersSection = new List<string>
+            {
+                "1 Albert Speer.",
+                "2 Footballers (academies of <i>Barcelona</i> and <i>Real Madrid</i>).",
+                "3 International Standard Book Number.",
+                "4 Danish flag.",
+                "5 Der Blaue Reiter (Blue Rider)."
+            };
+            
+            // When
+            var exception = Assert.Throws<ParsingException>(() =>
+                _questionAssembler.AssembleQuestions(questionsSection, answersSection));
+            
+            // Then
+            Assert.That(exception.Message, Is.EqualTo("Found 4 questions but 5 answers"));
         }
     }
 }
