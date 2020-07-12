@@ -19,7 +19,7 @@ namespace SaturdayQuizWeb.Services.Parsing
         private static readonly Regex MultipleWhitespaceRegex = new RegexBuilder()
             .Whitespace(AtLeast(2))
             .BuildRegex();
-        
+
         public IEnumerable<string> SplitSection(string section)
         {
             var splitSection = section.Split("\n").ToList();
@@ -42,6 +42,7 @@ namespace SaturdayQuizWeb.Services.Parsing
                 if (index == 0)
                 {
                     splitSection.RemoveAt(0);
+                    index--;
                 }
                 else
                 {
@@ -58,7 +59,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             splitSection = splitSection
                 .Select(text => MultipleWhitespaceRegex.Replace(text, " "))
                 .ToList();
-            
+
             return splitSection;
         }
     }

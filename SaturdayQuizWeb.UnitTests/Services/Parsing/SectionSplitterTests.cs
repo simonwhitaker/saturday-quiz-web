@@ -51,10 +51,10 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
                 "14 Prayers at 6am; 0 degrees longitude; 2, 3, 5, 7, etc?",
                 "15 Prince of Morocco (Au); Prince of Arragon (Ag); Bassanio (Pb)?"
             };
-            
+
             // When
             var actualSplitSection = _sectionSplitter.SplitSection(questionsSection).ToList();
-            
+
             // Then
             Assert.That(actualSplitSection, Is.EqualTo(expectedSplitSection));
         }
@@ -64,6 +64,7 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
         {
             // Given
             const string answersSection =
+                "Some introductory text\n" +
                 "1 Albert Speer.\n" +
                 "2 Footballers (academies of <i>Barcelona</i> and <i>Real Madrid</i>).\n" +
                 "3 International Standard Book Number.\n" +
@@ -82,7 +83,7 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
                 "14 Prime: canonical hour of prayer; prime meridian; prime numbers.\n" +
                 "15 Caskets chosen by Portia’s suitors in The Merchant Of Venice:\n" +
                 " gold; silver; lead.";
-            
+
             var expectedSplitSection = new List<string>
             {
                 "1 Albert Speer.",
@@ -101,10 +102,10 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
                 "14 Prime: canonical hour of prayer; prime meridian; prime numbers.",
                 "15 Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead."
             };
-                        
+
             // When
             var actualSplitSection = _sectionSplitter.SplitSection(answersSection).ToList();
-            
+
             // Then
             Assert.That(actualSplitSection, Is.EqualTo(expectedSplitSection));
         }
