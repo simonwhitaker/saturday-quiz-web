@@ -38,20 +38,25 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                 _quizMetadataService);
         }
 
-        [TestCase(7)]
-        public void TestGetQuizMetadata(int numberOfQuizzes)
+        [Test]
+        public void TestGetQuizMetadata()
         {
+            const int numberOfQuizzes = 7;
+
             var request = _quizMetadataService.GetQuizMetadataAsync(numberOfQuizzes);
             request.Wait();
             Assert.AreEqual(numberOfQuizzes, request.Result.Count);
         }
-        
-        [TestCase(50)]
-        public async Task WhenLastNQuizzesAreLoaded_ThenAllAreSuccessful(int numberOfQuizzes)
+
+        [Test]
+        public async Task WhenLastNQuizzesAreLoaded_ThenAllAreSuccessful()
         {
             // When
+            const int numberOfQuizzes = 50;
+
             var quizMetadataList = await _quizMetadataService.GetQuizMetadataAsync(numberOfQuizzes);
             var failedDates = new List<string>();
+
             // Then
             for (var index = 0; index < numberOfQuizzes; index++)
             {
@@ -60,7 +65,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                 {
                     var quiz = await _quizService.GetQuizAsync(quizMetadata.Id);
                     Console.WriteLine($"Index {index} successful");
-                    // PrintQuiz(quiz);
+                    PrintQuiz(quiz);
                 }
                 catch (Exception e)
                 {
@@ -69,7 +74,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                     Console.WriteLine($"Index {index} ({dateString}) failed: {e.Message} ({quizMetadata.Url})");
                 }
             }
-            
+
             Assert.That(failedDates, Is.Empty);
         }
 
@@ -77,7 +82,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
         {
             foreach (var q in quiz.Questions)
             {
-                Console.WriteLine($"{q.Number}. {q.Type} {q.QuestionText} / {q.AnswerText}");
+                Console.WriteLine($"{q.Number}. [{q.Type}] {q.QuestionText} {q.AnswerText}");
             }
             Console.WriteLine();
         }
