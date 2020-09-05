@@ -49,7 +49,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
         }
 
         [Test]
-        public async Task WhenLastNQuizzesAreLoaded_ThenAllAreSuccessful()
+        public async Task WhenLast50QuizzesAreLoaded_ThenAllAreSuccessful()
         {
             // When
             const int numberOfQuizzes = 50;
@@ -75,7 +75,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
                 }
             }
 
-            Assert.That(failedDates, Is.Empty);
+            Assert.That(failedDates, Is.Empty, "Failed to parse {0} of the last {1} quizzes", failedDates.Count, numberOfQuizzes);
         }
 
         private static void PrintQuiz(Quiz quiz)

@@ -29,11 +29,13 @@ namespace SaturdayQuizWeb.Services.Parsing
                 (current, tagRegex) => current.Remove(tagRegex));
 
             strippedText = BrTagRegex.Replace(strippedText, "\n");
-            strippedText = strippedText.Replace("&nbsp;", " ");
-            
+            strippedText = strippedText
+                .Replace("&nbsp;", " ")
+                .Replace("\u00A0", " "); // Unicode non-breaking space
+
             return strippedText;
         }
-        
+
         private static Regex BuildTagRegex(string tagName) => new RegexBuilder()
             .Text("<")
             .Text("/", ZeroOrOne)
@@ -42,7 +44,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             .AnyCharacterExcept(">", ZeroOrMore)
             .Text(">")
             .BuildRegex(RegexToolbox.RegexOptions.IgnoreCase);
-        
+
         private static Regex BuildBrTagRegex() => new RegexBuilder()
             .PossibleHtmlWhitespace()
             .Text("<")

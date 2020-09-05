@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using RegexToolbox;
 using SaturdayQuizWeb.Model.Parsing;
+using SaturdayQuizWeb.Utils;
+using RegexOptions = RegexToolbox.RegexOptions;
 
 namespace SaturdayQuizWeb.Services.Parsing
 {
@@ -14,8 +18,12 @@ namespace SaturdayQuizWeb.Services.Parsing
     {
         private const int CloseLinesThreshold = 2;
 
-        private static readonly IEnumerable<int> MinQuestionNumbers =
-            Enumerable.Range(1, ParsingConstants.MinimumQuestionCount);
+        private static readonly Regex PTagRegex = new RegexBuilder()
+            .Text("<p")
+            .WordBoundary()
+            .AnyCharacterExcept(">", RegexQuantifier.ZeroOrMore)
+            .Text(">")
+            .BuildRegex(RegexOptions.IgnoreCase);
 
         private class LineWithNumber
         {
@@ -27,18 +35,22 @@ namespace SaturdayQuizWeb.Services.Parsing
         public Sections ExtractSections(string wholePageHtml)
         {
             var allHtmlLines = wholePageHtml
+                .Replace("\n", string.Empty)
+                .Replace(PTagRegex, "\n<p>")
+                .Replace("</p>", "</p>\n")
                 .Split("\n")
+                .Where(s => !string.IsNullOrWhiteSpace(s))
                 .Select(line => line.Trim());
 
             var paragraphLines = FindParagraphLines(allHtmlLines);
 
             var sectionLines = paragraphLines
-                .Where(line => MinQuestionNumbers.All(number => line.Contains(number.ToString())))
+                .Where(IsSectionLine)
                 .ToList();
 
             if (sectionLines.Count != 2)
             {
-                throw new ParsingException($"Found {sectionLines.Count} matching lines in source HTML (expected 2)");
+                throw new ParsingException($"Found {sectionLines.Count} matching line(s) in source HTML (expected 2)");
             }
 
             return new Sections
@@ -76,6 +88,21 @@ namespace SaturdayQuizWeb.Services.Parsing
             }
 
             return paragraphLines.Select(lineWithNumber => lineWithNumber.Text);
+        }
+
+        private static bool IsSectionLine(string line)
+        {
+            var index = 0;
+            for (var number = 1; number <= ParsingConstants.MinimumQuestionCount; number++)
+            {
+                index = line.IndexOf(number.ToString(), index, StringComparison.Ordinal);
+                if (index == -1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static bool AreClose(int a, int b) => Math.Abs(a - b) < CloseLinesThreshold;
