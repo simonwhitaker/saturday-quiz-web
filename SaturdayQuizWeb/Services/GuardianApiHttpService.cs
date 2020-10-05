@@ -9,7 +9,7 @@ namespace SaturdayQuizWeb.Services
     {
         Task<GuardianApiResponse> ListQuizzesAsync(int pageSize = 5);
     }
-    
+
     public class GuardianApiHttpService : IGuardianApiHttpService
     {
         private readonly IRestClient _restClient;

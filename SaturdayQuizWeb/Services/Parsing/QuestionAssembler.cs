@@ -19,6 +19,7 @@ namespace SaturdayQuizWeb.Services.Parsing
     {
         private const string GroupNameNumber = "number";
         private const string GroupNameText = "text";
+
         private static readonly Regex NumberTextRegex = new RegexBuilder()
             .StartNamedGroup(GroupNameNumber)
             .Digit(OneOrMore)

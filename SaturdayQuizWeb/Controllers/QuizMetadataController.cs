@@ -12,7 +12,7 @@ namespace SaturdayQuizWeb.Controllers
     public class QuizMetadataController : ControllerBase
     {
         private const int DefaultQuizCount = 10;
-        
+
         private readonly IQuizMetadataService _quizMetadataService;
 
         public QuizMetadataController(IQuizMetadataService quizMetadataService)

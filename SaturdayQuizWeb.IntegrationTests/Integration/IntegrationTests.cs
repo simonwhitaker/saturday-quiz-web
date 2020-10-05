@@ -84,6 +84,7 @@ namespace SaturdayQuizWeb.IntegrationTests.Integration
             {
                 Console.WriteLine($"{q.Number}. [{q.Type}] {q.QuestionText} {q.AnswerText}");
             }
+
             Console.WriteLine();
         }
     }

@@ -14,7 +14,7 @@ namespace SaturdayQuizWeb.Utils
         {
             public const string GuardianApiKey = "GuardianApiKey";
         }
-        
+
         private readonly IConfiguration _configuration;
 
         public ConfigVariables(IConfiguration configuration)

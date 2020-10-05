@@ -17,17 +17,20 @@ namespace SaturdayQuizWeb.Services
         private readonly IHtmlService _htmlService;
         private readonly IQuizMetadataService _quizMetadataService;
 
-        public QuizService(IGuardianScraperHttpService scraperHttpService, IHtmlService htmlService, IQuizMetadataService quizMetadataService)
+        public QuizService(
+            IGuardianScraperHttpService scraperHttpService,
+            IHtmlService htmlService,
+            IQuizMetadataService quizMetadataService)
         {
             _scraperHttpService = scraperHttpService;
             _htmlService = htmlService;
             _quizMetadataService = quizMetadataService;
         }
-        
+
         public async Task<Quiz> GetQuizAsync(string id = null)
         {
             QuizMetadata quizMetadata;
-            
+
             if (id == null)
             {
                 var quizMetadataList = await _quizMetadataService.GetQuizMetadataAsync(1);

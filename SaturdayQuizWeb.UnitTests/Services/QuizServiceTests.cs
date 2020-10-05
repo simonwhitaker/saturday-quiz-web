@@ -21,7 +21,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         private const string TestQuestionText = "test question text";
         private const string TestQuestionAnswer = "test question answer";
         private const string TestHtmlContent = "test html content";
-        
+
         private readonly QuizMetadata _quizMetadata = new QuizMetadata
         {
             Id = TestQuizId,
@@ -29,6 +29,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
             Title = TestQuizTitle,
             Url = TestQuizUrl
         };
+
         private readonly List<Question> _questions = new List<Question>
         {
             new Question
@@ -44,7 +45,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
         private readonly IGuardianScraperHttpService _mockScraperHttpService;
         private readonly IHtmlService _mockHtmlService;
         private readonly IQuizMetadataService _mockQuizMetadataService;
-        
+
         // Object under test
         private readonly IQuizService _quizService;
 
@@ -73,7 +74,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
             Assert.AreEqual(TestQuizTitle, quiz.Title);
             Assert.AreEqual(_questions, quiz.Questions);
         }
-        
+
         [Test]
         public async Task GivenScraperServiceReturnsContent_WhenGetQuizAsyncWithNullId_ThenExpectedQuizReturned()
         {
@@ -92,7 +93,7 @@ namespace SaturdayQuizWeb.UnitTests.Services
             Assert.AreEqual(TestQuizTitle, quiz.Title);
             Assert.AreEqual(_questions, quiz.Questions);
         }
-        
+
         [Test]
         public async Task GivenScraperServiceReturnsContent_WhenGetQuizAsyncWithNonNullId_ThenExpectedQuizReturned()
         {
