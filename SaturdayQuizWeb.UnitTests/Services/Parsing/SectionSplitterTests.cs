@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NUnit.Framework;
 using SaturdayQuizWeb.Services.Parsing;
@@ -6,6 +7,7 @@ using SaturdayQuizWeb.Services.Parsing;
 namespace SaturdayQuizWeb.UnitTests.Services.Parsing
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class SectionSplitterTests
     {
         private readonly ISectionSplitter _sectionSplitter = new SectionSplitter();

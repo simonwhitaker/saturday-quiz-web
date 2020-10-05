@@ -14,8 +14,8 @@ namespace SaturdayQuizWeb.UnitTests.Services
         private ISectionExtractor _mockSectionExtractor;
         private IHtmlStripper _mockHtmlStripper;
         private ISectionSplitter _mockSectionSplitter;
-        private IQuestionAssembler _mockQuestionAssember;
-        
+        private IQuestionAssembler _mockQuestionAssembler;
+
         private IHtmlService _htmlService;
 
         [SetUp]
@@ -24,13 +24,13 @@ namespace SaturdayQuizWeb.UnitTests.Services
             _mockSectionExtractor = Substitute.For<ISectionExtractor>();
             _mockHtmlStripper = Substitute.For<IHtmlStripper>();
             _mockSectionSplitter = Substitute.For<ISectionSplitter>();
-            _mockQuestionAssember = Substitute.For<IQuestionAssembler>();
-            
+            _mockQuestionAssembler = Substitute.For<IQuestionAssembler>();
+
             _htmlService = new HtmlService(
                 _mockSectionExtractor,
                 _mockHtmlStripper,
                 _mockSectionSplitter,
-                _mockQuestionAssember);
+                _mockQuestionAssembler);
         }
 
         [Test]
@@ -67,11 +67,11 @@ namespace SaturdayQuizWeb.UnitTests.Services
             _mockHtmlStripper.StripHtml(expectedAnswersHtml).Returns(expectedAnswersHtmlStripped);
             _mockSectionSplitter.SplitSection(expectedQuestionsHtmlStripped).Returns(expectedQuestionsList);
             _mockSectionSplitter.SplitSection(expectedAnswersHtmlStripped).Returns(expectedAnswersList);
-            _mockQuestionAssember.AssembleQuestions(expectedQuestionsList, expectedAnswersList).Returns(expectedQuestions);
-            
+            _mockQuestionAssembler.AssembleQuestions(expectedQuestionsList, expectedAnswersList).Returns(expectedQuestions);
+
             // When
             var actualQuestions = _htmlService.FindQuestions(html);
-            
+
             // Then
             Assert.That(actualQuestions, Is.EqualTo(expectedQuestions));
         }

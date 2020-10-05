@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
-using RegexToolbox;
-using RegexToolbox.Extensions;
+﻿using System.Collections.Generic;
 using SaturdayQuizWeb.Model;
 using SaturdayQuizWeb.Services.Parsing;
-using SaturdayQuizWeb.Utils;
-using static RegexToolbox.RegexQuantifier;
-using RegexOptions = RegexToolbox.RegexOptions;
 
 namespace SaturdayQuizWeb.Services
 {
@@ -50,7 +41,7 @@ namespace SaturdayQuizWeb.Services
             var questions = _questionAssembler.AssembleQuestions(
                 questionsSectionSplit,
                 answersSectionSplit);
-            
+
             return questions;
         }
     }

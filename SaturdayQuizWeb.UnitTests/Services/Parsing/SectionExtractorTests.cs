@@ -1,14 +1,16 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using NUnit.Framework;
 using SaturdayQuizWeb.Services.Parsing;
 
 namespace SaturdayQuizWeb.UnitTests.Services.Parsing
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class SectionExtractorTests
     {
         private readonly ISectionExtractor _sectionExtractor = new SectionExtractor();
-        private string _wholePageHtml;
+        private readonly string _wholePageHtml;
 
         public SectionExtractorTests()
         {
@@ -53,7 +55,7 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
                 "<strong>13</strong> Parts of Mount Everest. <br>" +
                 "<strong>14</strong> Prime: canonical hour of prayer; prime meridian; prime numbers. <br>" +
                 "<strong>15</strong> Caskets chosen by Portia’s suitors in The Merchant Of Venice: gold; silver; lead.</p>";
-            
+
             // When
             var sections = _sectionExtractor.ExtractSections(_wholePageHtml);
 

@@ -79,6 +79,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             // Merge lines that are close in the source code
             for (var index = 1; index < paragraphLines.Count; index++)
             {
+                // ReSharper disable once InvertIf
                 if (AreClose(paragraphLines[index].Number, paragraphLines[index - 1].Number))
                 {
                     paragraphLines[index - 1].Text += paragraphLines[index].Text;

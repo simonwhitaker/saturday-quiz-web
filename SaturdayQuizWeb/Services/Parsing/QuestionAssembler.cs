@@ -97,7 +97,7 @@ namespace SaturdayQuizWeb.Services.Parsing
             }
         }
 
-        private void AddPlainTextStrings(IList<Question> questions)
+        private static void AddPlainTextStrings(IEnumerable<Question> questions)
         {
             foreach (var question in questions)
             {

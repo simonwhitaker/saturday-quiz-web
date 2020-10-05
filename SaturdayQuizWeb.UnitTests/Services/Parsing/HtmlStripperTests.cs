@@ -1,9 +1,11 @@
-﻿using NUnit.Framework;
+﻿using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 using SaturdayQuizWeb.Services.Parsing;
 
 namespace SaturdayQuizWeb.UnitTests.Services.Parsing
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class HtmlStripperTests
     {
         private readonly IHtmlStripper _htmlStripper = new HtmlStripper();
@@ -84,7 +86,7 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
             // When
             var actualQuestionsSection = _htmlStripper.StripHtml(questionsSectionHtml);
             var actualAnswersSection = _htmlStripper.StripHtml(answersSectionHtml);
-            
+
             // Then
             Assert.That(actualQuestionsSection, Is.EqualTo(expectedQuestionsSection));
             Assert.That(actualAnswersSection, Is.EqualTo(expectedAnswersSection));

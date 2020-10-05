@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NUnit.Framework;
 using SaturdayQuizWeb.Model;
@@ -7,6 +8,7 @@ using SaturdayQuizWeb.Services.Parsing;
 namespace SaturdayQuizWeb.UnitTests.Services.Parsing
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class QuestionAssemblerTests
     {
         private readonly IQuestionAssembler _questionAssembler = new QuestionAssembler();
@@ -194,6 +196,7 @@ namespace SaturdayQuizWeb.UnitTests.Services.Parsing
                 "2 What are produced at <i>La Masia</i> &amp; <i>La Fábrica</i>?"
             };
 
+            // ReSharper disable once CollectionNeverUpdated.Local
             var answersSection = new List<string>();
 
             // When
